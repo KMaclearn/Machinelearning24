@@ -256,19 +256,6 @@ def calculate_cost(fp_rate, fn_rate, P=0.01, Cost_fp=100, Cost_fn=15):
     return P * fp_rate * Cost_fp + (1 - P) * fn_rate * Cost_fn
     
 qda_proba = qda.predict_proba(X_test)[:, 1]
-hc0_cmp_best = GaussianMixture(n_components=best_nc0, max_iter=100, tol=1e-3, init_params='kmeans', random_state=42)
-hc1_cmp_best = GaussianMixture(n_components=best_nc1, max_iter=100, tol=1e-3, init_params='kmeans', random_state=42)
-hc0_best = X[y == 0]
-hc1_best = X[y == 1]
-
-try:
-    hc0_cmp_best.fit(hc0_best)
-    hc1_cmp_best.fit(hc1_best)
-except Exception as e:
-    print(f"Error fitting best GMM: {e}")
-    exit()
-
-mgd_predict_proba = make_predict_proba(hc0_cmp_best, hc1_cmp_best, 0.5, 0.5)
 mgd_proba = mgd_predict_proba(X_test)
 
 def find_optimal_threshold(proba, y_true):
@@ -286,13 +273,13 @@ min_cost_gmm, optimal_threshold_gmm, fpr_gmm, tpr_gmm, thresholds_gmm, min_cost_
 min_cost_mgd, optimal_threshold_mgd, fpr_mgd, tpr_mgd, thresholds_mgd, min_cost_index_mgd = find_optimal_threshold(mgd_proba, y_test)
 
 plt.figure(figsize=(12, 8))
-plt.plot(fpr_qda, tpr_qda, label=f'QDA (min cost = {min_cost_qda:.2f}, threshold = {optimal_threshold_qda:.2f})', color='green')
+plt.plot(fpr_qda, tpr_qda, label=f'QDA (min cost = {min_cost_qda:.2f})', color='green')
 plt.scatter(fpr_qda[min_cost_index_qda], tpr_qda[min_cost_index_qda], color='green')
 
-plt.plot(fpr_gmm, tpr_gmm, label=f'GMDA (min cost = {min_cost_gmm:.2f}, threshold = {optimal_threshold_gmm:.2f})', color='red')
+plt.plot(fpr_gmm, tpr_gmm, label=f'GMDA (min cost = {min_cost_gmm:.2f})', color='red')
 plt.scatter(fpr_gmm[min_cost_index_gmm], tpr_gmm[min_cost_index_gmm], color='red')
 
-plt.plot(fpr_mgd, tpr_mgd, label=f'Optimized GMDA (min cost = {min_cost_mgd:.2f}, threshold = {optimal_threshold_mgd:.2f})', color='blue')
+plt.plot(fpr_mgd, tpr_mgd, label=f'Optimized GMDA (min cost = {min_cost_mgd:.2f})', color='blue')
 plt.scatter(fpr_mgd[min_cost_index_mgd], tpr_mgd[min_cost_index_mgd], color='blue')
 
 plt.xlabel('False Positive Rate')
