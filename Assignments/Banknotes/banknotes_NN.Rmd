@@ -125,25 +125,57 @@ with torch.no_grad():
 ```
 
 ```{python}
-criterion = tnn.BCELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+model = tnn.Sequential(
+    tnn.Linear(in_features=nf, out_features=256),
+    tnn.ReLU(),
+    tnn.Dropout(0.5),
+    tnn.Linear(in_features=256, out_features=128),
+    tnn.ReLU(),
+    tnn.Dropout(0.3),
+    tnn.Linear(in_features=128, out_features=64),
+    tnn.ReLU(),
+    tnn.Linear(in_features=64, out_features=1),
+    tnn.Sigmoid()
+)
 
+optimizer = optim.Adam(model.parameters(), lr=0.0005) 
+criterion = tnn.BCELoss()
 num_epochs = 2500
+best_loss_valid = float('inf')
+patience = 100
+current_patience = 0
+
 for epoch in range(num_epochs):
+    model.train()
     optimizer.zero_grad()
     outputs = model(features_train)
     loss = criterion(outputs, labels_train)
     loss.backward()
     optimizer.step()
-    if (epoch+1) % 100 == 0:
-        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+    
+    if (epoch + 1) % 100 == 0:
+        model.eval()
+        with torch.no_grad():
+            outputs_valid = model(features_test)
+            loss_valid = criterion(outputs_valid, labels_test)
         
+        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}, Validation Loss: {loss_valid.item():.4f}')
+        
+        if loss_valid < best_loss_valid:
+            best_loss_valid = loss_valid
+            current_patience = 0
+        else:
+            current_patience += 1
+            if current_patience > patience:
+                print(f'Validation loss did not improve, stopping.')
+                break
+model.eval()
 with torch.no_grad():
-    y_proba = model(features_test).numpy()
-    y_predicted = (y_proba > 0.5).astype(int)
-    y_true = labels_test.numpy()
-    conf_matrix = confusion_matrix(y_true, y_predicted, normalize='true')
-    auc_score = roc_auc_score(y_true, y_proba)
+    y_proba = model(features_test)
+    y_predicted = (y_proba > 0.5).float()
+    y_true = labels_test
+    conf_matrix = confusion_matrix(y_true, y_predicted.numpy())
+    auc_score = roc_auc_score(y_true, y_proba.numpy())
 
 print('Confusion Matrix is:\n', conf_matrix)
 print(f'AUC Score is: {auc_score:.4f}')
