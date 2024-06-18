@@ -26,10 +26,14 @@ Repository not in the required format. Should be a clone of my repository
 14.06.2024 10:32:53
 Almost OK. The arguments pi0 and pi1 to `make_predict_proba` function are wrong. The numbers of countereit and non-counterfeit banknotes are not equal.  
 
+18.06.2024 12:29:27 OK
+
 ## Problem 3
 
 14.06.2024 10:33:21
 As in the previous problem
+
+18.06.2024 12:29:27 OK
 
 ## Problem 4
 
@@ -37,9 +41,12 @@ As in the previous problem
 Optimal points are wrongly plotted. 
 The three classifiers that should be compares are the classifiers from Problems A-C: GDA, GMDA and optimal GMDA
 
+18.06.2024 12:42:31
+Your cost is wrong. You should exchange the fp_rate and fn_rate. Positive means counterfeit. 
+
 # Banknotes NN
 
 14.06.2024 10:47:30
 You should at least try some more complicated network.
 
-
+18.06.2024 12:43:53 OK
