@@ -50,3 +50,6 @@ Your cost is wrong. You should exchange the fp_rate and fn_rate. Positive means 
 You should at least try some more complicated network.
 
 18.06.2024 12:43:53 OK
+
+1.07.2024 15:27:14
+The formula for loss is still wrong. False positive means rejecting a non-counterfeit banknote as counterfeit. The loss is the 15zl. But Probability of presenting a non-counterfeit banknote is 0.99 not 0.01. 
