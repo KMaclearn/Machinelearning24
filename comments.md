@@ -1,7 +1,10 @@
+Grade
+17/23 4.0
+
 22.05.2024 10:37:15
 Repository not in the required format. Should be a clone of my repository
 
-# Banknotes NB
+# Banknotes NB 4/4
 
 ## Problem 1
 
@@ -15,7 +18,7 @@ Repository not in the required format. Should be a clone of my repository
 
 14.06.2024 10:23:59 OK
 
-# Banknotes GMDA
+# Banknotes GMDA 9/15
 
 ## Problem 1
 
@@ -44,7 +47,7 @@ The three classifiers that should be compares are the classifiers from Problems 
 18.06.2024 12:42:31
 Your cost is wrong. You should exchange the fp_rate and fn_rate. Positive means counterfeit. 
 
-# Banknotes NN
+# Banknotes NN 4/4
 
 14.06.2024 10:47:30
 You should at least try some more complicated network.
